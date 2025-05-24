@@ -96,6 +96,20 @@ class GameBoard{
             }
             else { position.status = 'miss' }
         }
+        if(this.checkWin()){
+            return 'You have won!';
+        }
+    }
+
+    checkWin(){
+        for(let row in this.board){
+            for(let cell in row){
+                if(cell.hasShip === true && cell.ship.sunk !== true){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
 
