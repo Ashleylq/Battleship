@@ -41,7 +41,7 @@ class GameBoard{
         return Math.floor(Math.random() * num);
     }
 
-    #canPlaceShip(x, y, axis, length){
+    #canPlaceShip(y, x, axis, length){
         for(let i = 0; i < length; i++){
             let xi = axis === 'x' ? x + i : x;
             let yi = axis === 'y' ? y + i : y;
@@ -67,15 +67,15 @@ class GameBoard{
             y = num1;
             x = num2;
         }
-        if(this.#canPlaceShip(x, y, axis, length)){
+        if(this.#canPlaceShip(y, x, axis, length)){
             placed = true;
-            this.placeShip(x, y, axis, length, true);
+            this.placeShip(y, x, axis, length, true);
         }
       }
     }
-    placeShip(x, y, axis, length, random = false){
+    placeShip(y, x, axis, length, random = false){
         if(random === false){
-            if(!this.#canPlaceShip(x, y, axis, length)){
+            if(!this.#canPlaceShip(y, x, axis, length)){
                 return 'Cant place ship here';
             }
         }
@@ -85,6 +85,16 @@ class GameBoard{
             let yi = axis === 'y' ? y + i : y;
             this.board[yi][xi].hasShip = true;
             this.board[yi][xi].ship = ship;
+        }
+    }
+    hit(y, x){
+        let position = this.board[y][x];
+        if(position.status === 'active'){
+            if(position.hasShip === true){
+                position.ship.hit();
+                position.status = 'hit';
+            }
+            else { position.status = 'miss' }
         }
     }
 }
