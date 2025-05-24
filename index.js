@@ -87,7 +87,7 @@ class GameBoard{
             this.board[yi][xi].ship = ship;
         }
     }
-    hit(y, x){
+    recieveHit(y, x){
         let position = this.board[y][x];
         if(position.status === 'active'){
             if(position.hasShip === true){
@@ -96,12 +96,9 @@ class GameBoard{
             }
             else { position.status = 'miss' }
         }
-        if(this.checkWin()){
-            return 'You have won!';
-        }
     }
 
-    checkWin(){
+    checkLoss(){
         for(let row in this.board){
             for(let cell in row){
                 if(cell.hasShip === true && cell.ship.sunk !== true){
@@ -110,6 +107,42 @@ class GameBoard{
             }
         }
         return true;
+    }
+}
+
+class Player{
+    constructor(name, opponent = null){
+        this.name = name;
+        this.gameBoard = new GameBoard;
+        this.opponent = opponent;
+    }
+    attack(x, y){
+        this.opponent.gameBoard.recieveHit(y, x);
+    }
+    checkWin(){
+        return this.opponent.gameBoard.checkLoss();
+    }
+}
+
+class Computer{
+    constructor(opponent = null){
+        this.gameBoard = new GameBoard;
+        this.name = 'Computer';
+        this.opponent = opponent;
+    }
+    attack(){
+        let attacked = false;
+        while(!attacked){
+            let x = Math.floor(Math.random() * 10);
+            let y = Math.floor(Math.random() * 10);
+            if(this.opponent.gameBoard[y][x].status === 'active' &&
+                this.opponent.gameBoard[y][x].hasShip ){
+                    this.opponent.gameBoard.recieveHit(y, x);
+                }
+        }
+    }
+    checkWin(){
+        return this.opponent.gameBoard.checkLoss();
     }
 }
 
